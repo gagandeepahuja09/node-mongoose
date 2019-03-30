@@ -9,18 +9,35 @@ connect.then((db) => {
 	console.log('Connected correctly to server');
 
 	Dishes.create({
-		name: 'Chicken',
-		description: 'tasty',
+		name: 'Brocolli',
+		description: 'nice',
 	})
 	.then((dish) => {
 		console.log(dish);
 
 		// find will find all the dishes because no query applied
 		// exec ensures that it is executed
-		return Dishes.find({}).exec();
+		return Dishes.findByIdAndUpdate(dish._id, {
+			$set: { description: 'Updated test' }
+		},{ new : true,
+		}).exec();
 	})
-	.then((dishes) => {
-		console.log(dishes);
+	.then((dish) => {
+		console.log(dish);
+
+		// since comments is of array type, we can push elements in it.
+		dish.comments.push({
+			rating: 5,
+			comment: 'I am feeling fantastico',
+			author: 'Picasso',
+		});
+
+		return dish.save();
+
+	}).
+	then((dish) => {
+		console.log(dish);
+
 		return Dishes.remove({});
 	})
 	.then(() => {
